@@ -25,6 +25,7 @@ class _OtpScreenState extends State<OtpScreen> {
           child:SingleChildScrollView(
             padding: EdgeInsets.all(24),
             child: Form(
+              key: _key,
               child: Column(
                 children: [
                   SizedBox(height: 80,),
