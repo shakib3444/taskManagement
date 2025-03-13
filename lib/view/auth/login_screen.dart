@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:taskmanagement/view/auth/forgot_password_verify_email_screen.dart';
 import 'package:taskmanagement/view/auth/sign_up_screen.dart';
 import 'package:taskmanagement/view/widgets/bg_image.dart';
 
@@ -46,13 +47,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
 
                   SizedBox(height: 16,),
-                  ElevatedButton(onPressed: (){}, child: Icon(Icons.arrow_circle_right_outlined)),
+                  ElevatedButton(onPressed: _onTapSignUpButton, child: Icon(Icons.arrow_circle_right_outlined)),
 
                   SizedBox(height: 32,),
 
                   Column(
                     children: [
-                      TextButton(onPressed:(){}, child: Text("Forgot Password?")),
+                      TextButton(onPressed:_onTapForgotPasswordButton, child: Text("Forgot Password?")),
 
                       RichText(text: TextSpan(
                         style: const TextStyle(
@@ -83,9 +84,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // void _onTapForgotPasswordButton(){
-  //   Navigator.push(context, MaterialPageRoute(builder: (context)(){}))
-  // }
+  void _onTapForgotPasswordButton(){
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>ForgotPasswordVerifyEmailScreen()));
+  }
 
   void _onTapSignUpButton() {
     Navigator.push(
