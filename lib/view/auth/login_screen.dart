@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:taskmanagement/route/route_name.dart';
 import 'package:taskmanagement/view/auth/forgot_password_verify_email_screen.dart';
 import 'package:taskmanagement/view/auth/sign_up_screen.dart';
 import 'package:taskmanagement/view/widgets/bg_image.dart';
@@ -47,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
 
                   SizedBox(height: 16,),
-                  ElevatedButton(onPressed: _onTapSignUpButton, child: Icon(Icons.arrow_circle_right_outlined)),
+                  ElevatedButton(onPressed:()=>Navigator.pushNamed(context, AppRoute.appBottomNavScreen), child: Icon(Icons.arrow_circle_right_outlined,color: Colors.white,)),
 
                   SizedBox(height: 32,),
 

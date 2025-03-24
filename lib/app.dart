@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:taskmanagement/route/route_name.dart';
+import 'package:taskmanagement/view/app_bottom_navigation/screen/app_bottom_navigationbar.dart';
+import 'package:taskmanagement/view/auth/login_screen.dart';
+import 'package:taskmanagement/view/auth/sign_up_screen.dart';
 import 'package:taskmanagement/view/splash_screen/screen/splash_screen.dart';
 
 class TaskManage extends StatefulWidget {
@@ -13,7 +17,7 @@ class _TaskManageState extends State<TaskManage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      //home: SplashScreen(),
       theme: ThemeData(
         colorSchemeSeed: Colors.green,
         inputDecorationTheme: InputDecorationTheme(
@@ -39,6 +43,13 @@ class _TaskManageState extends State<TaskManage> {
           titleLarge: TextStyle(fontSize: 24,fontWeight: FontWeight.w600),
         )
       ),
+
+      routes: {
+        AppRoute.splashScreen:(context)=>SplashScreen(),
+        AppRoute.loginScreen:(context)=>LoginScreen(),
+        AppRoute.signupScreen:(context)=>SignUpScreen(),
+        AppRoute.appBottomNavScreen:(context)=>AppBottomNavigationBar(),
+      },
 
 
     );
