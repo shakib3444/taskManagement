@@ -16,6 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _loginInProgress = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +28,8 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 children: [
                   SizedBox(height: 80,),
-                  Text("Get Started With",style: Theme.of(context).textTheme.titleLarge,),
+                  Text("Get Started With",
+                    style: Theme.of(context).textTheme.titleLarge,),
 
                   SizedBox(height: 25,),
                   TextFormField(
@@ -48,13 +50,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
 
                   SizedBox(height: 16,),
-                  ElevatedButton(onPressed:()=>Navigator.pushNamed(context, AppRoute.appBottomNavScreen), child: Icon(Icons.arrow_circle_right_outlined,color: Colors.white,)),
+                  Visibility(
+                    visible: _loginInProgress == false,
+                    replacement: CircularProgressIndicator.adaptive(),
+                    child: ElevatedButton(
+                        onPressed:()=>Navigator.pushNamed(context,
+                            AppRoute.appBottomNavScreen),
+                        child: Icon(
+                          Icons.arrow_circle_right_outlined,
+                          color: Colors.white,),
+                    ),
+                  ),
 
                   SizedBox(height: 32,),
 
                   Column(
                     children: [
-                      TextButton(onPressed:_onTapForgotPasswordButton, child: Text("Forgot Password?")),
+                      TextButton(
+                          onPressed:_onTapForgotPasswordButton,
+                          child: Text("Forgot Password?"),
+                      ),
 
                       RichText(text: TextSpan(
                         style: const TextStyle(
@@ -86,7 +101,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onTapForgotPasswordButton(){
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>ForgotPasswordVerifyEmailScreen()));
+    Navigator.push(context, MaterialPageRoute(
+        builder: (context)=>ForgotPasswordVerifyEmailScreen(),
+    ),
+    );
   }
 
   void _onTapSignUpButton() {
@@ -96,6 +114,21 @@ class _LoginScreenState extends State<LoginScreen> {
         builder: (context) => const SignUpScreen(),
       ),
     );
+  }
+  void _onTapSignInButton(){
+    if(_formKey.currentState!.validate()){
+      _login();
+    }
+  }
+  Future<void> _login()async{
+    _loginInProgress = true;
+    setState(() {
+      Map<String, dynamic> requestBody ={
+        "email":_emailController.text.trim(),
+        "password":_passwordController.text,
+      };
+
+    });
   }
 
   @override

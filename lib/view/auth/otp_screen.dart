@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:taskmanagement/view/auth/reset_password_screen.dart';
 import 'package:taskmanagement/view/widgets/bg_image.dart';
 
@@ -35,26 +34,26 @@ class _OtpScreenState extends State<OtpScreen> {
                   Text("A 6 digit verification pin has been sent to your email",style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey),),
 
                   SizedBox(height: 24,),
-                  PinCodeTextField(
-                    length: 6,
-                    obscureText: false,
-                    animationType: AnimationType.fade,
-                    keyboardType: TextInputType.number,
-                    pinTheme: PinTheme(
-                      shape: PinCodeFieldShape.box,
-                      borderRadius: BorderRadius.circular(5),
-                      fieldHeight: 50,
-                      fieldWidth: 40,
-                      activeFillColor: Colors.white,
-                      selectedFillColor: Colors.white,
-                      inactiveFillColor: Colors.white,
-                    ),
-                    animationDuration: const Duration(milliseconds: 300),
-                    backgroundColor: Colors.transparent,
-                    enableActiveFill: true,
-                    controller: _pinCodeController,
-                    appContext: context,
-                  ),
+                  // PinCodeTextField(
+                  //   length: 6,
+                  //   obscureText: false,
+                  //   animationType: AnimationType.fade,
+                  //   keyboardType: TextInputType.number,
+                  //   pinTheme: PinTheme(
+                  //     shape: PinCodeFieldShape.box,
+                  //     borderRadius: BorderRadius.circular(5),
+                  //     fieldHeight: 50,
+                  //     fieldWidth: 40,
+                  //     activeFillColor: Colors.white,
+                  //     selectedFillColor: Colors.white,
+                  //     inactiveFillColor: Colors.white,
+                  //   ),
+                  //   animationDuration: const Duration(milliseconds: 300),
+                  //   backgroundColor: Colors.transparent,
+                  //   enableActiveFill: true,
+                  //   controller: _pinCodeController,
+                  //   appContext: context,
+                  // ),
 
                   SizedBox(height: 16,),
                   ElevatedButton(onPressed: _onTapSubmitButton, child: Text("Verify")),
@@ -99,7 +98,6 @@ class _OtpScreenState extends State<OtpScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _pinCodeController.dispose();
   }

@@ -8,6 +8,8 @@ import 'package:taskmanagement/view/splash_screen/screen/splash_screen.dart';
 class TaskManage extends StatefulWidget {
   const TaskManage({super.key});
 
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   State<TaskManage> createState() => _TaskManageState();
 }
@@ -16,6 +18,7 @@ class _TaskManageState extends State<TaskManage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: TaskManage.navigatorKey,
       debugShowCheckedModeBanner: false,
       //home: SplashScreen(),
       theme: ThemeData(
