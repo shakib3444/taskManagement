@@ -1,6 +1,4 @@
 
-
-import 'package:taskmanagement/app.dart';
 import 'package:taskmanagement/data/model/task_model.dart';
 
 class TaskListModel{
