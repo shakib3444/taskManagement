@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskmanagement/data/model/user_model.dart';
+import 'package:get/get.dart';
 
 class AuthController{
   static String? token;
@@ -41,11 +42,42 @@ class AuthController{
     return false;
 
   }
+
   static clearUserData()async{
     SharedPreferences pref = await SharedPreferences.getInstance();
     await pref.clear();
     token = null;
     userModel = null;
   }
+
+  //Registration  function
+  // Future<void> registerUser()async{
+  //   _registrationInProgress = true;
+  //   setState(() {});
+  //   Map<String, dynamic> requestBody = {
+  //     "email": _emailTEController.text.trim(),
+  //     "firstName": _firstNameTEController.text.trim(),
+  //     "lastName": _lastNameTEController.text.trim(),
+  //     "mobile": _mobileTEController.text.trim(),
+  //     "password": _passwordTEController.text
+  //   };
+  //   NetworkResponse response = await NetworkClient.postRequest(
+  //     url:Urls.registerUrl,
+  //     body: requestBody,
+  //   );
+  //   _registrationInProgress = false;
+  //   setState(() {});
+  //   if(response.isSuccess){
+  //     _clearTextFields();
+  //     showSnackBarMessage(context, "User registered successfully!");
+  //   }else{
+  //     showSnackBarMessage(context, response.errorMessage,true);
+  //   }
+  //
+  // }
+
+
+
+
 
 }

@@ -4,6 +4,7 @@ import 'package:taskmanagement/view/app_bottom_navigation/screen/app_bottom_navi
 import 'package:taskmanagement/view/auth/login_screen.dart';
 import 'package:taskmanagement/view/auth/sign_up_screen.dart';
 import 'package:taskmanagement/view/splash_screen/screen/splash_screen.dart';
+import 'package:get/get.dart';
 
 class TaskManage extends StatefulWidget {
   const TaskManage({super.key});
@@ -17,7 +18,7 @@ class TaskManage extends StatefulWidget {
 class _TaskManageState extends State<TaskManage> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       navigatorKey: TaskManage.navigatorKey,
       debugShowCheckedModeBanner: false,
       //home: SplashScreen(),

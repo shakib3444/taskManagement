@@ -1,11 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:taskmanagement/data/service/network_client_dart.dart';
+import 'package:taskmanagement/data/utils/urls.dart';
 import 'package:taskmanagement/view/widgets/bg_image.dart';
+import 'package:taskmanagement/view/widgets/snack_bar_message.dart';
 
 import 'login_screen.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({super.key});
+  const ResetPasswordScreen({super.key,});
+
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
@@ -15,6 +19,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final TextEditingController _newPasswordTEController = TextEditingController();
   final TextEditingController _confirmNewPasswordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool isPasswordResets = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,6 +45,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 ),
                 const SizedBox(height: 24),
                 TextFormField(
+                  controller: _newPasswordTEController,
                   textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(
                     hintText: 'New Password',
@@ -88,19 +94,41 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     );
   }
   void _onTapSubmitButton() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
-          (pre) => false,
-    );
+    resetPassword();
   }
 
   void _onTapSignInButton() {
+
+  }
+
+  Future<void> resetPassword ()async{
+    isPasswordResets = true;
+    setState(() {
+
+    });
+    Map<String, dynamic> requestBody ={
+      "email":"widget.email",
+      "OTP": "widget.otp",
+      "password":_newPasswordTEController.text.trim(),
+
+    };
+  final NetworkResponse response = await NetworkClient.postRequest(
+      url: Urls.recoverResetPassword,
+    body: requestBody,
+  );
+  if(response.isSuccess){
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const LoginScreen()),
           (pre) => false,
     );
+  }else{
+    showSnackBarMessage(context, response.errorMessage,true);
+  }
+  isPasswordResets = false;
+  setState(() {
+
+  });
   }
 
   @override

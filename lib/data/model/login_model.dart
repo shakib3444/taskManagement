@@ -1,7 +1,4 @@
 
-
-import 'dart:convert';
-
 import 'package:taskmanagement/data/model/user_model.dart';
 
 class LoginModel {
@@ -12,6 +9,6 @@ class LoginModel {
   LoginModel.fromJson(Map<String, dynamic> jsonData){
     status = jsonData['status']??"";
     token = jsonData['token'] ?? '';
-    userModel = UserModel.fromJson(jsonDecode('data')??{});
+    userModel = UserModel.fromJson(jsonData['data']??{});
   }
 }
