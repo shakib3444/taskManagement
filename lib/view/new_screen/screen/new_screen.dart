@@ -5,7 +5,6 @@ import 'package:taskmanagement/data/utils/urls.dart';
 import 'package:taskmanagement/view/add_new_task/add_new_task.dart';
 import 'package:taskmanagement/view/widgets/snack_bar_message.dart';
 import 'package:taskmanagement/view/widgets/task_card.dart';
-
 import '../../../data/model/task_model.dart';
 import '../../../data/model/task_status_count_list_model.dart';
 import '../../../data/model/task_status_count_model.dart';
@@ -65,9 +64,6 @@ class _NewScreenState extends State<NewScreen> {
                 separatorBuilder: (context, index) => const SizedBox(height: 8),
               ),
             )
-
-
-
 
           ],
         ),
