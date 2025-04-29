@@ -1,16 +1,12 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:taskmanagement/data/controller/auth_controller.dart';
-import 'package:taskmanagement/data/model/login_model.dart';
-import 'package:taskmanagement/data/service/network_client_dart.dart';
-import 'package:taskmanagement/view/app_bottom_navigation/screen/app_bottom_navigationbar.dart';
+import 'package:taskmanagement/data/controller/user_authentication_controller.dart';
+import 'package:taskmanagement/route/route_name.dart';
 import 'package:taskmanagement/view/auth/forgot_password_verify_email_screen.dart';
-import 'package:taskmanagement/view/auth/sign_up_screen.dart';
 import 'package:taskmanagement/view/widgets/bg_image.dart';
 import 'package:taskmanagement/view/widgets/snack_bar_message.dart';
-
-import '../../data/utils/urls.dart';
+import 'package:get/get.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _loginInProgress = false;
+  final UserAuthenticationController userController = Get.find<UserAuthenticationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: "Email",
                     ),
                     validator: (String?value){
-                      String email = value!.trim()??"";
+                      String email = value!.trim();
                       if(EmailValidator.validate(email) == false){
                         return "Enter a valid Email";
                       }
@@ -74,17 +70,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   SizedBox(height: 16,),
 
-                  Visibility(
-                    visible: _loginInProgress == false,
-                    replacement: CircularProgressIndicator.adaptive(),
-                    child: ElevatedButton(
-                        onPressed:(){
-                          _onTapSignInButton();
-                        },
-                        child: Icon(
-                          Icons.arrow_circle_right_outlined,
-                          color: Colors.white,),
-                    ),
+                  GetBuilder<UserAuthenticationController>(
+                    builder: (controller) {
+                      return Visibility(
+                        visible: controller.isLoginProgress == false,
+                        replacement: CircularProgressIndicator.adaptive(),
+                        child: ElevatedButton(
+                            onPressed:(){
+                              _onTapSignInButton();
+                            },
+                            child: Icon(
+                              Icons.arrow_circle_right_outlined,
+                              color: Colors.white,),
+                        ),
+                      );
+                    }
                   ),
 
                   SizedBox(height: 32,),
@@ -135,12 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //Signup button function
   void _onTapSignUpButton() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const SignUpScreen(),
-      ),
-    );
+    Get.toNamed(AppRoute.signupScreen);
   }
 
   //login button function
@@ -152,34 +147,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //login  function
   Future<void> _login()async{
-    _loginInProgress = true;
-    setState((){});
-      Map<String, dynamic> requestBody ={
-        "email":_emailController.text.trim(),
-        "password":_passwordController.text,
-      };
-      NetworkResponse response = await NetworkClient.postRequest(
-          url: Urls.loginUrl,
-          body: requestBody,
-      );
-      _loginInProgress = false;
-        setState(() {});
-      if(response.isSuccess){
-        LoginModel loginModel = LoginModel.fromJson(response.data!);
-        AuthController.saveUserInformation(loginModel.token, loginModel.userModel);
+    bool isSuccess = await userController.userLogin(email: _emailController.text.trim(), password: _passwordController.text);
+      if(isSuccess){
         dispose();
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const AppBottomNavigationBar(),
-          ),
-              (predicate) => false,
-        );
+        Get.offNamed(AppRoute.appBottomNavScreen);
+        showSnackBarMessage(context, "Login Successful");
+
       }else{
-        showSnackBarMessage(context, response.errorMessage,true);
+        showSnackBarMessage(context, userController.errorMessage!,true);
       }
-
-
   }
 
   @override

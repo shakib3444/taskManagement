@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:taskmanagement/route/route_name.dart';
 import 'package:taskmanagement/utilis/assets_path.dart';
 import 'package:taskmanagement/view/app_bottom_navigation/screen/app_bottom_navigationbar.dart';
 import 'package:taskmanagement/view/auth/login_screen.dart';
 import 'package:taskmanagement/view/widgets/bg_image.dart';
-
+import 'package:get/get.dart';
 import '../../../data/controller/auth_controller.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -24,7 +25,9 @@ class _SplashScreenState extends State<SplashScreen> {
   void _moveToNextScreen()async{
     await Future.delayed(Duration(seconds: 2));
     final bool isLoggedIn = await AuthController.checkIfUserLoggedIn();
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>isLoggedIn?AppBottomNavigationBar():LoginScreen()));
+    isLoggedIn?Get.offNamed(AppRoute.appBottomNavScreen):Get.offNamed(AppRoute.loginScreen);
+
+    //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>isLoggedIn?AppBottomNavigationBar():LoginScreen()));
   }
   @override
   Widget build(BuildContext context) {

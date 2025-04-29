@@ -3,8 +3,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:taskmanagement/data/service/network_client_dart.dart';
 import 'package:taskmanagement/data/utils/urls.dart';
+import 'package:taskmanagement/route/route_name.dart';
 import 'package:taskmanagement/view/widgets/bg_image.dart';
 import 'package:taskmanagement/view/widgets/snack_bar_message.dart';
+import 'package:get/get.dart';
+
+import '../../data/controller/user_authentication_controller.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -20,7 +24,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _mobileTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _registrationInProgress = false;
+  final UserAuthenticationController _userAuthController = Get.find<UserAuthenticationController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,13 +118,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
 
                 const SizedBox(height: 16),
-                Visibility(
-                  visible: _registrationInProgress == false,
-                  replacement:  Center(child: CircularProgressIndicator(),),
-                  child: ElevatedButton(
-                    onPressed: _onTapSubmitButton,
-                    child: const Icon(Icons.arrow_circle_right_outlined),
-                  ),
+
+                GetBuilder<UserAuthenticationController>(
+                  builder: (controller) {
+                    return Visibility(
+                      visible: controller.isSignUpProgress == false,
+                      replacement:  Center(child: CircularProgressIndicator(),),
+                      child: ElevatedButton(
+                        onPressed: _onTapSubmitButton,
+                        child: const Icon(Icons.arrow_circle_right_outlined),
+                      ),
+                    );
+                  }
                 ),
 
                 const SizedBox(height: 32),
@@ -173,26 +182,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   //call api for Signup
   Future<void> _registerUser()async{
-    _registrationInProgress = true;
-    setState(() {});
-    Map<String, dynamic> requestBody = {
-      "email": _emailTEController.text.trim(),
-      "firstName": _firstNameTEController.text.trim(),
-      "lastName": _lastNameTEController.text.trim(),
-      "mobile": _mobileTEController.text.trim(),
-      "password": _passwordTEController.text
-    };
-    NetworkResponse response = await NetworkClient.postRequest(
-        url:Urls.registerUrl,
-      body: requestBody,
+    final bool isSuccess = await _userAuthController.registerUser(
+        email: _emailTEController.text.trim(),
+        firstName: _firstNameTEController.text.trim(),
+        lastName: _lastNameTEController.text.trim(),
+        mobile: _mobileTEController.text.trim(),
+        password:_passwordTEController.text.trim()
     );
-    _registrationInProgress = false;
-    setState(() {});
-    if(response.isSuccess){
+    if(isSuccess){
       _clearTextFields();
       showSnackBarMessage(context, "User registered successfully!");
+      Get.toNamed(AppRoute.loginScreen);
     }else{
-      showSnackBarMessage(context, response.errorMessage,true);
+      showSnackBarMessage(context, _userAuthController.errorMessage!,true);
     }
 
   }

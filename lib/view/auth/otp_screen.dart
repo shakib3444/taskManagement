@@ -1,13 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:taskmanagement/data/service/network_client_dart.dart';
-import 'package:taskmanagement/data/utils/urls.dart';
-import 'package:taskmanagement/view/auth/reset_password_screen.dart';
+import 'package:taskmanagement/data/controller/user_forgot_password_controller.dart';
+import 'package:taskmanagement/route/route_name.dart';
 import 'package:taskmanagement/view/widgets/bg_image.dart';
 import 'package:taskmanagement/view/widgets/snack_bar_message.dart';
-
-import 'login_screen.dart';
+import 'package:get/get.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key,});
@@ -19,8 +17,9 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   final _pinCodeController = TextEditingController();
-  bool isOtpVerify = false;
+  final  email = Get.arguments.toString();
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
+  final UserForgotPasswordController forgotController = Get.find<UserForgotPasswordController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +61,14 @@ class _OtpScreenState extends State<OtpScreen> {
                   ),
 
                   SizedBox(height: 16,),
-                  ElevatedButton(onPressed: _onTapSubmitButton, child: Text("Verify")),
+                  GetBuilder<UserForgotPasswordController>(
+                    builder: (controller) {
+                      return Visibility(
+                        visible: controller.isOTPVerify == false,
+                          replacement: Center(child: CircularProgressIndicator(),),
+                          child: ElevatedButton(onPressed: _onTapSubmitButton, child: Text("Verify")));
+                    }
+                  ),
 
                   SizedBox(height: 32,),
 
@@ -92,31 +98,20 @@ class _OtpScreenState extends State<OtpScreen> {
     sendVerifyOtp();
   }
   void _onTapSignInButton() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
-          (pre) => false,
-    );
+    Get.offNamed(AppRoute.loginScreen);
   }
 
   Future<void> sendVerifyOtp ()async{
-    isOtpVerify = true;
-    setState(() {
-
-    });
-
-    final otp = _pinCodeController.text;
-    final email = "";
-    final NetworkResponse response = await NetworkClient.getRequest(url: Urls.recoverVerifyOtp(email,otp));
-    if(response.statusCode == 200){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ResetPasswordScreen()));
+    bool isSuccess = await forgotController.sendVerifyOtp(otp: _pinCodeController.text.trim(), email: email);
+    if(isSuccess){
+      Get.offNamed(AppRoute.resetPasswordScreen,
+      arguments: {
+        "email":email,
+        "otp":_pinCodeController.text.trim(),
+      });
     }else{
-      showSnackBarMessage(context, response.errorMessage,true);
+      showSnackBarMessage(context, forgotController.errorMessage!,true);
     }
-    isOtpVerify =false;
-    setState(() {
-
-    });
 
   }
 
