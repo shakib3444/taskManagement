@@ -152,9 +152,6 @@ class _LoginScreenState extends State<LoginScreen> {
         dispose();
         Get.offNamed(AppRoute.appBottomNavScreen);
         showSnackBarMessage(context, "Login Successful");
-
-      }else{
-        showSnackBarMessage(context, userController.errorMessage!,true);
       }
   }
 
