@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:taskmanagement/data/model/task_list_model.dart';
-import 'package:taskmanagement/data/model/task_model.dart';
-import 'package:taskmanagement/data/service/network_client_dart.dart';
-import 'package:taskmanagement/data/utils/urls.dart';
 import 'package:taskmanagement/view/widgets/snack_bar_message.dart';
 import 'package:taskmanagement/view/widgets/task_card.dart';
+import 'package:get/get.dart';
+import '../controller/progress_controller.dart';
+
 
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});
@@ -14,8 +13,8 @@ class ProgressScreen extends StatefulWidget {
 }
 
 class _ProgressScreenState extends State<ProgressScreen> {
-  bool _isProgressTask = false;
-  List<TaskModel> taskList = [];
+  final ProgressController progressController = Get.find();
+
   @override
   void initState() {
     super.initState();
@@ -26,39 +25,34 @@ class _ProgressScreenState extends State<ProgressScreen> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Visibility(
-          visible: _isProgressTask ==false,
-          replacement: Center(child: CircularProgressIndicator(),),
-          child: ListView.builder(
-            itemCount: taskList.length,
-              itemBuilder: (context,index){
-                return TaskCard(
-                  taskStatus: TaskStatus.progress,
-                  taskModel: taskList[index],
-                  refreshList:showProgressList,
-                );
-              },
+        child: GetBuilder<ProgressController>(
+          builder: (controller) {
+            return Visibility(
+              visible: controller.isProgressTask ==false,
+              replacement: Center(child: CircularProgressIndicator(),),
+              child: ListView.builder(
+                itemCount:progressController.taskList.length,
+                  itemBuilder: (context,index){
+                    return TaskCard(
+                      taskStatus: TaskStatus.progress,
+                      taskModel:progressController.taskList[index],
+                      refreshList:showProgressList,
+                    );
+                  },
 
-          ),
+              ),
+            );
+          }
         ),
       ),
     );
   }
 
   Future<void> showProgressList()async{
-    _isProgressTask = true;
-    setState(() {});
-    final NetworkResponse response = await NetworkClient.getRequest(url: Urls.progressTaskListUrl);
-    if(response.isSuccess){
-      TaskListModel taskListModel = TaskListModel.fromJson(response.data??{});
-      taskList = taskListModel.taskList;
-    }else{
-      showSnackBarMessage(context, response.errorMessage,true);
+    bool isSuccess =await progressController.showProgressList();
+    if(isSuccess){
+      showSnackBarMessage(context, "Progress Task get Success");
     }
-    _isProgressTask =false;
-    setState(() {
-
-    });
 
   }
 }

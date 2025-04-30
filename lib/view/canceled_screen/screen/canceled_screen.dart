@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:taskmanagement/data/model/task_list_model.dart';
-import 'package:taskmanagement/data/model/task_model.dart';
-import 'package:taskmanagement/data/service/network_client_dart.dart';
-import 'package:taskmanagement/data/utils/urls.dart';
+import 'package:taskmanagement/view/canceled_screen/controller/canceled_task_controller.dart';
 import 'package:taskmanagement/view/widgets/snack_bar_message.dart';
 import '../../widgets/task_card.dart';
+import 'package:get/get.dart';
 
 class CanceledScreen extends StatefulWidget {
   const CanceledScreen({super.key});
@@ -14,8 +12,8 @@ class CanceledScreen extends StatefulWidget {
 }
 
 class _CanceledScreenState extends State<CanceledScreen> {
-  bool isCanceledTask = false;
-  List<TaskModel> taskList = [];
+  final CanceledTaskController canceledTaskController = Get.find();
+
   @override
   void initState() {
     super.initState();
@@ -26,37 +24,34 @@ class _CanceledScreenState extends State<CanceledScreen> {
     return Scaffold(
        body: Padding(
          padding: EdgeInsets.all(16),
-         child: Visibility(
-           visible: isCanceledTask == false,
-           replacement:  Center(child: CircularProgressIndicator(),),
-           child: ListView.builder(
-             itemCount:taskList.length,
-              itemBuilder: (context,index){
-            return TaskCard(
-              taskStatus: TaskStatus.cancelled,
-              taskModel: taskList[index],
-              refreshList:getCanceledTask,
-            );
+         child: GetBuilder<CanceledTaskController>(
+           builder: (controller) {
+             return Visibility(
+               visible: controller.isCanceledTask == false,
+               replacement:  Center(child: CircularProgressIndicator(),),
+               child: ListView.builder(
+                 itemCount:controller.taskList.length,
+                  itemBuilder: (context,index){
+                return TaskCard(
+                  taskStatus: TaskStatus.cancelled,
+                  taskModel: controller.taskList[index],
+                  refreshList:getCanceledTask,
+                );
 
-               },
+                   },
 
-               ),
+                   ),
+             );
+           }
          ),
        ),
     );
   }
 
   Future<void> getCanceledTask()async{
-    isCanceledTask=true;
-    setState(() {});
-    final NetworkResponse response = await NetworkClient.getRequest(url: Urls.cancelledTaskListUrl);
-    if(response.isSuccess){
-      TaskListModel taskListModel = TaskListModel.fromJson(response.data ??{});
-      taskList = taskListModel.taskList;
-    }else{
-      showSnackBarMessage(context, response.errorMessage,true);
-    }
-    isCanceledTask = false;
-    setState(() {});
+   bool isSuccess =await canceledTaskController.getAllCanceledTask();
+   if(isSuccess){
+     showSnackBarMessage(context, "Get all canceled Task success");
+   }
   }
 }
