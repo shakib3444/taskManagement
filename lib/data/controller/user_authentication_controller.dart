@@ -1,18 +1,26 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:taskmanagement/data/service/network_client_dart.dart';
-
 import '../model/login_model.dart';
 import '../utils/urls.dart';
 import 'auth_controller.dart';
 
 class UserAuthenticationController extends GetxController{
+
+
+  Rx<TextEditingController> emailController = TextEditingController().obs;
+  Rx<TextEditingController> passwordController = TextEditingController().obs;
+  Rx<TextEditingController> firstNameController = TextEditingController().obs;
+  Rx<TextEditingController> lastNameController = TextEditingController().obs;
+  Rx<TextEditingController> mobileController = TextEditingController().obs;
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
    bool _isSignUpProgress = false;
    bool _isLoginProgress = false;
-  String? _errorMessage;
+   String? errorMessage;
+   bool? get isSignUpProgress =>_isSignUpProgress;
+   bool? get isLoginProgress=>_isLoginProgress;
 
-  bool? get isSignUpProgress => _isSignUpProgress;
-  bool? get isLoginProgress => _isLoginProgress;
-  String? get errorMessage => _errorMessage;
 
 
   //Registration
@@ -21,12 +29,10 @@ class UserAuthenticationController extends GetxController{
     required String firstName,
     required String lastName,
     required String mobile,
-    required String password
-  })async{
+    required String password,})async{
     bool isSuccess = false;
-
     _isSignUpProgress = true;
-    update();
+
     Map<String, dynamic> requestBody = {
       "email": email,
       "firstName": firstName,
@@ -41,10 +47,10 @@ class UserAuthenticationController extends GetxController{
     if(response.statusCode == 200){
       print("User SignUp success");
       isSuccess = true;
-      _errorMessage = null;
+      errorMessage = null;
 
     }else{
-      _errorMessage = response.errorMessage;
+      errorMessage = response.errorMessage;
     }
     _isSignUpProgress= false;
     update();
@@ -73,10 +79,10 @@ class UserAuthenticationController extends GetxController{
        AuthController.saveUserInformation(loginModel.token, loginModel.userModel);
        print("User SignUp success");
        isSuccess = true;
-       _errorMessage = null;
+       errorMessage = null;
 
      }else{
-       _errorMessage = response.errorMessage;
+       errorMessage = response.errorMessage;
      }
      _isLoginProgress = false;
      update();

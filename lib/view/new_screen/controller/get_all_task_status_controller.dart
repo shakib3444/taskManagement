@@ -12,6 +12,11 @@ class GetAllTaskStatusController extends GetxController{
   List? get taskStatusCountList => _taskStatusCountList;
   bool? get getStatusCountInProgress => _getStatusCountInProgress;
 
+  @override
+  void onInit() {
+    super.onInit();
+    getAllTaskStatusCount();
+  }
 
   Future<bool> getAllTaskStatusCount()async{
     bool isSuccess = false;

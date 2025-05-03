@@ -15,6 +15,12 @@ class NewTaskController extends GetxController{
   bool? get isGetAllTask => _isGetAllTask;
   List? get newTaskList => _newTaskList;
   List? get taskStatusCountList => _taskStatusCountList;
+  @override
+  void onInit() {
+    super.onInit();
+    getAllNewTaskList();
+
+  }
 
 
 

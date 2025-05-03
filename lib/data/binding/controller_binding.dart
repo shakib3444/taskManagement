@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:taskmanagement/data/controller/edit_task_controller.dart';
 import 'package:taskmanagement/view/add_new_task/controller/add_new_task_controller.dart';
 import '../../view/canceled_screen/controller/canceled_task_controller.dart';
 import '../../view/complete_screen/controller/complete_task_controller.dart';
@@ -19,6 +20,7 @@ class ControllerBinding extends Bindings{
     Get.lazyPut(()=>ProgressController());
     Get.lazyPut(()=>CompleteTaskController());
     Get.lazyPut(()=>CanceledTaskController());
+    Get.lazyPut(()=>EditTaskController());
   }
 
 }
